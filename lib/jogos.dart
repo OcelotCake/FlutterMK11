@@ -233,8 +233,9 @@ class _JogosPageState extends State<JogosPage> {
                 child: FutureBuilder<List<Map<String, dynamic>>>(
                   future: _supabase.from('profiles').select('id, username'),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting)
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
+                    }
                     final usuarios = snapshot.data ?? [];
                     final meuId = _supabase.auth.currentUser?.id;
                     final outrosJogadores = usuarios
@@ -337,8 +338,9 @@ class _JogosPageState extends State<JogosPage> {
                       .select()
                       .eq('game_id', game['id']),
                   builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting)
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
+                    }
                     final lista = snapshot.data ?? [];
                     bool euJaEstouNaLista = lista.any(
                       (p) => p['user_id'] == meuId,
@@ -610,7 +612,7 @@ class _JogosPageState extends State<JogosPage> {
     Function(String?) onChanged,
   ) {
     return DropdownButtonFormField<String>(
-      value: value,
+      initialValue: value,
       decoration: InputDecoration(
         labelText: label,
         prefixIcon: Icon(icon, color: Colors.blue),
@@ -626,16 +628,18 @@ class _JogosPageState extends State<JogosPage> {
     return StreamBuilder<List<Map<String, dynamic>>>(
       stream: _gamesStream,
       builder: (context, snapshot) {
-        if (!snapshot.hasData)
+        if (!snapshot.hasData) {
           return const Center(child: CircularProgressIndicator());
+        }
         final games = snapshot.data!;
-        if (games.isEmpty)
+        if (games.isEmpty) {
           return const Center(
             child: Text(
               "Nenhuma partida ativa.",
               style: TextStyle(color: Colors.white54),
             ),
           );
+        }
         return ListView.builder(
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
